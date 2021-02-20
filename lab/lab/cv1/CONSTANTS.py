@@ -1,3 +1,7 @@
+"""
+Represents kind of config for first lab
+"""
+
 LEARNING_RATE = 0.1
 
 LEFT_PTS = -100

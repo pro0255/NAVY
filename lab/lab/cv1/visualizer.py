@@ -28,6 +28,13 @@ class LineVisualizer:
         
 
     def create_clusters(self, X, y_guess):
+        """Segments data accroding to position [-1, 0, 1]
+        Args:
+            X (int[][]): Points [x, y]
+            y_guess (int[]): Labels [-1, 0, 1]
+        Returns:
+            [((int[], int[]), (int[], int[]), (int[], int[]))]: [description]
+        """
         x_points = X[:, 0]
         y_points = X[:, 1]
 
@@ -61,6 +68,11 @@ class LineVisualizer:
 
 
     def draw_train(self, X, y_guess):
+        """Draws points and line from train data
+        Args:
+            X (int[][]): Points [x, y]
+            y_guess (int[]): Labels [-1, 0, 1]
+        """
         self.draw(X, y_guess, self.ax)
 
         if not self.legendTrain:
@@ -68,11 +80,23 @@ class LineVisualizer:
             self.ax.legend()
         
     def draw_test(self, X, y_guess):
+        """Draws points and line from test data
+        Args:
+            X (int[][]): Points [x, y]
+            y_guess (int[]): Labels [-1, 0, 1]
+        """
         self.draw(X, y_guess, self.ax2)
         
 
 
     def draw(self, X, y_guess, ax):
+        """Draw to plot
+
+        Args:
+            X (int[][]): Points [x, y]
+            y_guess (int[]): Labels [-1, 0, 1]
+            ax (Object): Plot to draw
+        """
         point_left = [CONSTANTS.LEFT_PTS, equation(CONSTANTS.LEFT_PTS)]
         point_right = [CONSTANTS.RIGHT_PTS, equation(CONSTANTS.RIGHT_PTS)]
 
