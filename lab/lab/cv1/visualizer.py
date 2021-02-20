@@ -4,8 +4,9 @@ from utils.equation import equation
 from lab.cv1 import CONSTANTS
 
 
-FIGURE_NAME = 'LineVisualizer' 
-PLOT_NAME = 'y = 4 * x - 5'
+FIGURE_NAME = 'LineVisualizer - 4 * x - 5' 
+TRAIN_PLOT_NAME = 'TRAIN'
+TEST_PLOT_NAME = 'TEST'
 
 
 class LineVisualizer:
@@ -17,9 +18,13 @@ class LineVisualizer:
             facecolor="w",
             edgecolor="k",
         )
-        self.ax = self.fig.add_subplot(111, title=PLOT_NAME)
-        self.legend=False
+        self.ax = self.fig.add_subplot(121, title=TRAIN_PLOT_NAME)
+        self.ax2 = self.fig.add_subplot(122, title=TEST_PLOT_NAME)
+
+        self.legendTrain=False
         self.ax.grid(True)
+        self.ax2.grid(True)
+
         
 
     def create_clusters(self, X, y_guess):
@@ -48,25 +53,36 @@ class LineVisualizer:
 
         return ((x_up, y_up), (x_on, y_on), (x_down, y_down))
 
-    def draw_clusters(self, clusters):
+    def draw_clusters(self, clusters, ax):
         up, on, down = clusters
-        self.ax.scatter(up[0], up[1], c=CONSTANTS.COLOR_UP, label="nad")
-        self.ax.scatter(on[0], on[1], c=CONSTANTS.COLOR_ON, label="na")
-        self.ax.scatter(down[0], down[1], c=CONSTANTS.COLOR_DOWN, label="pod")
+        ax.scatter(up[0], up[1], c=CONSTANTS.COLOR_UP, label="nad")
+        ax.scatter(on[0], on[1], c=CONSTANTS.COLOR_ON, label="na")
+        ax.scatter(down[0], down[1], c=CONSTANTS.COLOR_DOWN, label="pod")
 
-    def draw(self, X, y_guess):
+
+    def draw_train(self, X, y_guess):
+        self.draw(X, y_guess, self.ax)
+
+        if not self.legendTrain:
+            self.legendTrain = True
+            self.ax.legend()
+        
+    def draw_test(self, X, y_guess):
+        self.draw(X, y_guess, self.ax2)
+        
+
+
+    def draw(self, X, y_guess, ax):
         point_left = [CONSTANTS.LEFT_PTS, equation(CONSTANTS.LEFT_PTS)]
         point_right = [CONSTANTS.RIGHT_PTS, equation(CONSTANTS.RIGHT_PTS)]
 
         x_values = [point_left[0], point_right[0]]
         y_values = [point_left[1], point_right[1]]
 
-        self.draw_clusters(self.create_clusters(X, y_guess))
-        self.ax.plot(x_values, y_values, c="gray")
+        self.draw_clusters(self.create_clusters(X, y_guess), ax)
+        ax.plot(x_values, y_values, c="gray")
 
-        if not self.legend:
-            self.legend = True
-            self.ax.legend()
+
 
         plt.draw()
         plt.pause(CONSTANTS.PAUSE_PLOT_TIME)

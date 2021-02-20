@@ -43,11 +43,15 @@ class Perceptron:
                 current_error = error(y[index], y_guess)
                 self.weights = self.recalculate_weights(current_error, x)
 
-            lv.draw(X, y_guesses)
+            lv.draw_train(X, y_guesses)
 
     def predict(self, X):
         y_prediction = [
             signum(x, self.weights[0 : len(self.weights) - 1], self.weights[-1])
             for x in X
         ]
-        return np.array(y_prediction)
+
+        res =  np.array(y_prediction)
+        lv.draw_test(X, res)
+        return res
+        
