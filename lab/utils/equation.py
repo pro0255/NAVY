@@ -1,2 +1,2 @@
 def equation(x):
-    return 4*x - 5
+    return 4 * x - 5
