@@ -62,9 +62,9 @@ class LineVisualizer:
 
     def draw_clusters(self, clusters, ax):
         up, on, down = clusters
-        ax.scatter(up[0], up[1], c=CONSTANTS.COLOR_UP, label="nad")
-        ax.scatter(on[0], on[1], c=CONSTANTS.COLOR_ON, label="na")
-        ax.scatter(down[0], down[1], c=CONSTANTS.COLOR_DOWN, label="pod")
+        ax.scatter(up[0], up[1], c=CONSTANTS.COLOR_UP, label="over")
+        ax.scatter(on[0], on[1], c=CONSTANTS.COLOR_ON, label="on")
+        ax.scatter(down[0], down[1], c=CONSTANTS.COLOR_DOWN, label="under")
 
 
     def draw_train(self, X, y_guess):
