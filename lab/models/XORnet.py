@@ -26,7 +26,6 @@ class XORnet:
         self.out_H = sigmoid(X @ self.weights_H + self.bias_H)
         self.out_O = sigmoid(self.out_H @ self.weights_O + self.bias_O)
 
-    #make comments
     def back_propagation(self, X, y, debug_print=False):
         errors = error(y, self.out_O)
         if debug_print:
