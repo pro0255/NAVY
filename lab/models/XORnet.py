@@ -16,7 +16,7 @@ class XORnet:
     def fit(self, X, y):
         for i in range(CONSTANTS.NUMBER_OF_EPOCHS):
             self.forward_propagation(X)
-            self.back_propagation(X, y, i%1000==0)
+            self.back_propagation(X, y)
 
     def predict(self, X):
         self.forward_propagation(X)
