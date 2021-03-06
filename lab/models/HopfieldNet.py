@@ -21,10 +21,11 @@ class HopfieldNet:
             print('Pattern was not saved cause bad shape')
             return
         W = from_pattern2matrix(pattern)
-        if self.W == None:
+        if self.W is None:
             self.W = W
         else:
             self.W += W
+        print('Saved pattern in net')
 
     def recover_sync(self, destroyed_picture):
         vector = np.array(destroyed_picture.flatten())
