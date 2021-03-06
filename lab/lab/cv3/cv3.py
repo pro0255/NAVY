@@ -1,31 +1,14 @@
 import numpy as np
-from lab.cv3.CONSTANTS import pattern8, test_pattern
-
-def replace0_to_1(matrix):
-    #mutate input
-    matrix[matrix == 0] = -1
-
-
-def create_column_vector(matrix):
-    vector = matrix.flatten()
-    column = np.array([vector]).T
-    return column
-
-def create_weighted_matrix(vector):
-    return vector @ vector.T 
-
-def sub_I(matrix):
-    np.fill_diagonal(matrix, 0)
-
-def from_pattern2matrix(pattern):
-    replace0_to_1(pattern)
-    vec = create_column_vector(test_pattern)
-    W = create_weighted_matrix(vec)
-    sub_I(W)
-    return W
-
-
+from lab.cv3.CONSTANTS import pattern8, pattern8_destroyed
+from lab.cv3.utils.from_pattern2matrix import from_pattern2matrix 
+from models.HopfieldNet import HopfieldNet
 
 
 def cv3():
-    print(from_pattern2matrix(test_pattern))
+    net = HopfieldNet()
+    net.save_pattern(pattern8)
+    result_sync = net.recover_sync(np.copy(pattern8_destroyed))
+    result_async = net.recover_async(np.copy(pattern8_destroyed))
+    print('Dest\n', pattern8_destroyed)
+    print('Sync\n', result_sync)
+    print('Async\n', result_async)

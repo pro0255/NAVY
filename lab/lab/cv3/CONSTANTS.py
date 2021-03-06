@@ -22,4 +22,16 @@ pattern8 = np.array([
     [0, 1, 1, 1, 0]
 ])
 
+pattern8_destroyed = np.array([
+    [0, 1, 0, 0, 0],
+    [0, 1, 0, 1, 0],
+    [0, 1, 1, 1, 0],
+    [0, 1, 0, 1, 0],
+    [0, 1, 1, 1, 0]
+])
+
+
+
+
 test_pattern = np.array([[1,0], [0,1]])
+test_pattern_destroyed = np.array([[0,0], [0,1]])
