@@ -1,7 +1,7 @@
 from lab.cv2 import CONSTANTS 
 import numpy as np
 from utils.sigmoid import sigmoid, sigmoid_
-from utils.error import error, error2
+from utils.error import error
 from lab.cv3.utils.from_pattern2matrix import from_pattern2matrix
 from lab.cv3.utils.replace0_to_1 import replace1_to_0, replace0_to_1
 from utils.signum import signum
