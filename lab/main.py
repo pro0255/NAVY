@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 
 # cv1()
-cv2()
-# cv3()
+# cv2()
+cv3()
 # input("Press Enter to end...")
 
