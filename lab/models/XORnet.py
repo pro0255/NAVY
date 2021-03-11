@@ -43,15 +43,14 @@ class XORnet:
         
 
     def back_propagation(self, current_x, current_y, debug_print=False):
-        #here is minus
+        error_ = error(current_y, self.net3) #missing '-' #error / out3
 
-        error_ = error(current_y, self.net3)
-        delta_O = error_ * sigmoid_(self.net3)
-
+        delta_O = error_ * sigmoid_(self.net3) #out3 / net3
+        #net3 = w5*net1 + w6*net2 + b_o
         #w5
-        update_w5 = delta_O[0] * self.net1 * self.learning_rate
+        update_w5 = delta_O[0] * self.net1 * self.learning_rate #net3 / w5
         #w6
-        update_w6 = delta_O[0] * self.net2 * self.learning_rate
+        update_w6 = delta_O[0] * self.net2 * self.learning_rate #net3 / w6
         #bias O
         update_bias_O = delta_O[0] * self.learning_rate
 

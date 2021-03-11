@@ -35,3 +35,6 @@ pattern8_destroyed = np.array([
 
 test_pattern = np.array([[1,0], [0,1]])
 test_pattern_destroyed = np.array([[0,0], [0,1]])
+
+
+SIZE_OF_GAME = 5
