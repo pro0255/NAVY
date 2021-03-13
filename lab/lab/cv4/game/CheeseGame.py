@@ -6,8 +6,9 @@ from lab.cv4.game.GameState import GameState
 from lab.cv4.game.RectState import RectState
 from lab.cv4.game.board import Board
 from models.QLearning import QLearning
-from lab.cv4.CONSTANTS import BLACK_COLOR, YELLOW_COLOR, PINK_COLOR 
+from lab.cv4.CONSTANTS import BLACK_COLOR, YELLOW_COLOR, PINK_COLOR, LEARNING_RATE
 import numpy as np
+import pandas as pd
 
 W_W = 500
 SELECT_BAR = 200
@@ -30,7 +31,7 @@ class CheeseGame:
         screen_width = W_W
         screen_height = W_H
         # flag to know if game menu has been showed
-        self.state = GameState.MENU
+        self.state = GameState.ENV
         self.n = N
         # flag to set game loop
         self.running = True
@@ -46,9 +47,8 @@ class CheeseGame:
         pygame.display.set_caption(window_title)
         # update display
         pygame.display.flip()
-        self.Qlearn = QLearning()
+        self.Qlearn = QLearning(LEARNING_RATE)
         # set game clock
-        self.rect_state = RectState.WALL
         self.clock = pygame.time.Clock()
 
 
@@ -304,7 +304,8 @@ class CheeseGame:
                 # change menu flag
                 matrix = from_dic_matrix(self.board.mem, self.n)
                 self.Qlearn.env_matrix = matrix
-                print(matrix)
+                print('Created Env Matrix: \n', pd.DataFrame(matrix))
+                print('\n')
                 self.Qlearn.create_env()
 
             if back_btn.collidepoint(mouse_coords[0], mouse_coords[1]):
