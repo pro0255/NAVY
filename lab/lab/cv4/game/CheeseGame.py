@@ -335,8 +335,6 @@ class CheeseGame:
         self.board.draw_board(False)
 
         if self.prediction:
-            if self.Qlearn.game_process(False):
-                self.prediction = False
             reminder = self.Qlearn.position % (self.n)
             row = int(self.Qlearn.position / self.n) 
 
@@ -348,6 +346,8 @@ class CheeseGame:
                       ((box.x + (box.width - mouse_label.get_width()) // 2, 
                       box.y + (box.height - mouse_label.get_height()) // 2)))
 
+            if self.Qlearn.game_process(False):
+                self.prediction = False
 
 
         key_pressed = pygame.key.get_pressed()
