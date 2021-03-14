@@ -31,7 +31,7 @@ class Board():
         self.mem = {(y, x): RectState.EMPTY for y in range(self.n) for x in range(self.n)}
 
     # method to draw pieces on the chess board
-    def draw_board(self):
+    def draw_board(self, allow_click=True):
         for rowI, row in enumerate(self.board_locations):
             for colI, col in enumerate(row):
                 value = self.mem[(colI, rowI)]
@@ -46,14 +46,15 @@ class Board():
                     color = BLACK_COLOR
                 pygame.draw.rect(self.screen, color, box)
 
-        util = Utils()
-        # check if left mouse button was clicked
-        if util.left_click_event():
-            # call function to get mouse event
-            mouse_coords = util.get_mouse_event()
-            column = mouse_coords[0] // (self.square_length)
-            row = mouse_coords[1] // (self.square_length)
-            if (row, column) in self.mem:
-                self.mem[(row, column)] = self.rect_state
+        if allow_click:
+            util = Utils()
+            # check if left mouse button was clicked
+            if util.left_click_event():
+                # call function to get mouse event
+                mouse_coords = util.get_mouse_event()
+                column = mouse_coords[0] // (self.square_length)
+                row = mouse_coords[1] // (self.square_length)
+                if (row, column) in self.mem:
+                    self.mem[(row, column)] = self.rect_state
 
 

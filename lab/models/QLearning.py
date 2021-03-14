@@ -19,22 +19,49 @@ class QLearning():
         self.position = 0
         self.max_generation = epochs
         self.not_allowed_start = []
+        self.processed = False
 
-    def predict(self):
-        print('predict')
 
-    def fit(self):
-        print('fit')
 
-    def move(self):
+    def game_process(self, learn = True):
+
+        if not learn and not self.processed:
+            print(pd.DataFrame(self.Q))
+
+        if not self.processed:
+            self.set_init_position()
+            self.processed = True
+
+        if self.move(learn):
+            self.generation += 1
+            self.prob = 1 / self.generation
+            self.set_init_position()
+            if not learn:
+                return True
+        return False
+
+
+    def move(self, learn = True):
         current_room = self.env[self.position]
-
         def check_condition(x):
             return x != NOT_ALLOWED
-        
+
+        r = np.random.uniform()
+        random_choice = r <= self.prob and learn
         possible_actions = np.argwhere(check_condition(current_room)).flatten()
         action = random.choice(possible_actions)
 
+        if not random_choice:
+            # print('not random')
+            current_state_Qs = np.array([self.Q[self.position][current_state_action] for current_state_action in possible_actions])
+            max_value_Q = np.max(current_state_Qs)
+            options_indicies = np.argwhere(current_state_Qs == max_value_Q).flatten()
+            selected_index_from_options = random.choice(options_indicies)
+            action = possible_actions[selected_index_from_options]
+            # print('action', action)
+        else:
+            pass
+            # print('random')
 
         next_state_room = self.env[action]
         next_state_all_actions = np.argwhere(check_condition(next_state_room)).flatten()
@@ -44,6 +71,7 @@ class QLearning():
 
 
         if QLearningDebug:
+            print('currentPosition\n', self.position)
             print('currentRoom\n', current_room)
             print('currentAction\n', action)
 
@@ -57,7 +85,6 @@ class QLearning():
 
 
         update = self.env[self.position][action] + self.learning_rate * maximum
-
         if QLearningDebug:
             print('update\n', update)
 
@@ -78,17 +105,22 @@ class QLearning():
             self.epoch()
         print('Finished all epochs')
 
-    def epoch(self):
+
+    def set_init_position(self):
+        print('init')
         verticies = list(range(len(self.env)))
         options = list(filter(lambda v: v not in self.not_allowed_start, verticies))
         self.position = random.choice(options)
-        while not self.move():
+
+
+    def epoch(self):
+        while not self.move(True):
             # print('moving')
             pass
         self.generation += 1
         self.prob = 1 / self.generation
 
-    def create_env(self):
+    def create_env(self, fast_learn):
         if self.env_matrix is None:
             raise ValueError('Env matrix is NONE!')
         #y, x
@@ -115,7 +147,7 @@ class QLearning():
             for x in range(size):
                 vertex_id = y * size + x
                 for _y, _x in movement:
-                    edge_y = y + _y  
+                    edge_y = y + _y
                     edge_x = x + _x
                     in_env = (edge_y >= 0 and edge_y < size) and (edge_x >= 0 and edge_x < size)
                     if not in_env:
@@ -126,12 +158,14 @@ class QLearning():
 
 
 
-        self.run_epochs()
+
 
         # if QLearningDebug:
-        print(pd.DataFrame(self.Q))
-        
-        # print(pd.DataFrame(self.env))
+        # print(pd.DataFrame(self.Q))        
+        print(pd.DataFrame(self.env))
+
+        if fast_learn:
+            self.run_epochs()
         print('Creating ENV')
 
 

@@ -6,7 +6,7 @@ from lab.cv4.game.GameState import GameState
 from lab.cv4.game.RectState import RectState
 from lab.cv4.game.board import Board
 from models.QLearning import QLearning
-from lab.cv4.CONSTANTS import BLACK_COLOR, YELLOW_COLOR, PINK_COLOR, LEARNING_RATE
+from lab.cv4.CONSTANTS import BLACK_COLOR, YELLOW_COLOR, PINK_COLOR, LEARNING_RATE, GREEN_COLOR, MOUSE_NAME, FAST_LEARN
 import numpy as np
 import pandas as pd
 
@@ -50,17 +50,20 @@ class CheeseGame:
         self.Qlearn = QLearning(LEARNING_RATE)
         # set game clock
         self.clock = pygame.time.Clock()
+        self.learning = False
+        self.prediction = False
+        self.square_length = 0
 
 
     def start_game(self):
         """Function containing main game loop""" 
         # chess board offset
         self.board_offset_x = 0
-        self.board_offset_y = (EXTRA / 2)/2 
+        self.board_offset_y = (EXTRA / 2) /2 
         self.board_dimensions = (self.board_offset_x, self.board_offset_y)
 
         # get the width of a chess board square
-        square_length = W_W / self.n
+        self.square_length = W_W / self.n
 
         # initialize list that stores all places to put chess pieces on the board
         self.board_locations = []
@@ -69,14 +72,14 @@ class CheeseGame:
         for x in range(0, self.n):
             self.board_locations.append([])
             for y in range(0, self.n):
-                self.board_locations[x].append([self.board_offset_x+(x*square_length), 
-                                                self.board_offset_y+(y*square_length)])
+                self.board_locations[x].append([self.board_offset_x+(x*self.square_length), 
+                                                self.board_offset_y+(y*self.square_length)])
 
-        self.board = Board(self.screen, self.board_locations, square_length, self.n)
+        self.board = Board(self.screen, self.board_locations, self.square_length, self.n)
 
         # game loop
         while self.running:
-            self.clock.tick(15)
+            self.clock.tick(5)
             # poll events
             for event in pygame.event.get():
                 # get keys pressed
@@ -89,24 +92,14 @@ class CheeseGame:
 
             if self.state == GameState.MENU:
                 self.menu()
-                if debug:
-                    print('menu')
             elif self.state == GameState.ENV:
                 self.save()
-                if debug:
-                    print('save')
-            else:
-                self.recover()
-                if debug:
-                    print('recover')
-            
-
-            # update display
+            elif self.state == GameState.LEARNING:
+                self.learn()
+            elif self.state == GameState.TESTING:
+                self.predict()
             pygame.display.flip()
-            # update events
             pygame.event.pump()
-
-        # call method to stop pygame
         pygame.quit()
 
 
@@ -172,9 +165,6 @@ class CheeseGame:
             elif key_pressed[K_ESCAPE]:
                 self.state = GameState.MENU
 
-
-
-
     def menu(self):
         """method to show game menu"""
         # background color
@@ -186,17 +176,17 @@ class CheeseGame:
         # coordinates for "Play" button
 
 
-        # save, recover
-        save_btn = pygame.Rect(0, 300, W_W, 50)
-
         gap = 20
 
+        save_btn = pygame.Rect(0, 300, W_W, 50)
         recover_btn = pygame.Rect(0, 350 + gap, W_W, 50)
+        testing_btn = pygame.Rect(0, 400 + gap * 2, W_W, 50)
+
         
         # show play button
         pygame.draw.rect(self.screen, black_color, save_btn)
-
         pygame.draw.rect(self.screen, black_color, recover_btn)
+        pygame.draw.rect(self.screen, black_color, testing_btn)
 
         # white color
         white_color = (255, 255, 255)
@@ -209,6 +199,7 @@ class CheeseGame:
 
         save_btn_label = small_font.render("Create ENV", True, white_color)
         recover_btn_label = small_font.render("Learn", True, white_color)
+        testing_btn_label = small_font.render("Testing", True, white_color)
         
         # show welcome text
         self.screen.blit(welcome_text, 
@@ -227,33 +218,28 @@ class CheeseGame:
                       ((recover_btn.x + (save_btn.width - recover_btn_label.get_width()) // 2, 
                       recover_btn.y + (save_btn.height - recover_btn_label.get_height()) // 2)))
 
+        self.screen.blit(testing_btn_label, 
+                      ((testing_btn.x + (testing_btn.width - testing_btn_label.get_width()) // 2, 
+                      testing_btn.y + (testing_btn.height - testing_btn_label.get_height()) // 2)))
 
-
-        # get pressed keys
         key_pressed = pygame.key.get_pressed()
-        # 
         util = Utils()
 
-        # check if left mouse button was clicked
         if util.left_click_event():
-            # call function to get mouse event
             mouse_coords = util.get_mouse_event()
 
-            # check if "Play" button was clicked
             if save_btn.collidepoint(mouse_coords[0], mouse_coords[1]):
-                # change button behavior as it is hovered
                 pygame.draw.rect(self.screen, white_color, save_btn, 3)
-                # change menu flag
                 self.state = GameState.ENV
 
-            # check if enter or return key was pressed
             if recover_btn.collidepoint(mouse_coords[0], mouse_coords[1]):
-                # change button behavior as it is hovered
                 pygame.draw.rect(self.screen, white_color, recover_btn, 3)
-                # change menu flag
                 self.state = GameState.LEARNING
-
-
+            
+            if testing_btn.collidepoint(mouse_coords[0], mouse_coords[1]):
+                pygame.draw.rect(self.screen, white_color, testing_btn, 3)
+                self.state = GameState.TESTING
+    
             elif key_pressed[K_RETURN]:
                 self.state = GameState.MENU
 
@@ -306,7 +292,7 @@ class CheeseGame:
                 self.Qlearn.env_matrix = matrix
                 print('Created Env Matrix: \n', pd.DataFrame(matrix))
                 print('\n')
-                self.Qlearn.create_env()
+                self.Qlearn.create_env(FAST_LEARN)
 
             if back_btn.collidepoint(mouse_coords[0], mouse_coords[1]):
                 self.state = GameState.MENU
@@ -319,91 +305,148 @@ class CheeseGame:
             print('save')
 
 
-    def recover(self):
+    def predict(self):
         black_color = (0, 0, 0)
         color = (0,255,0)
         self.screen.fill(color)
         btn_h = 50
         gap = 10
         h_gap = 10
-        sync_btn = pygame.Rect(0, W_H - btn_h - h_gap, W_W / 2 - (gap / 2), btn_h / 2)
-        async_btn = pygame.Rect(W_W / 2 + (gap / 2), W_H - btn_h - h_gap, W_W / 2, btn_h / 2)
-        
-        back_btn = pygame.Rect(0, W_H - (btn_h / 2), W_W / 2 - (gap / 2), btn_h / 2)
-        reset_btn = pygame.Rect(W_W / 2 + (gap / 2), W_H - (btn_h / 2), W_W / 2, btn_h / 2)
+        start_btn = pygame.Rect(0, W_H - btn_h - h_gap, W_W, btn_h / 2)        
+        back_btn = pygame.Rect(0, W_H - (btn_h / 2), W_W, btn_h / 2)
+        pygame.draw.rect(self.screen, black_color, start_btn)
+        pygame.draw.rect(self.screen, black_color, back_btn)
+        white_color = (255, 255, 255)
+        big_font = pygame.font.SysFont("comicsansms", 50)
+        small_font = pygame.font.SysFont("comicsansms", 20)
+        start_btn_label = small_font.render("Start Testing", True, white_color)        
+        back_btn_label = small_font.render("Back", True, white_color)        
+
+        self.screen.blit(start_btn_label, 
+                      ((start_btn.x + (start_btn.width - start_btn_label.get_width()) // 2, 
+                      start_btn.y + (start_btn.height - start_btn_label.get_height()) // 2)))
+                      
+
+        self.screen.blit(back_btn_label, 
+                      ((back_btn.x + (back_btn.width - back_btn_label.get_width()) // 2, 
+                      back_btn.y + (back_btn.height - back_btn_label.get_height()) // 2)))
+                      
+
+        self.board.draw_board(False)
+
+        if self.prediction:
+            if self.Qlearn.game_process(False):
+                self.prediction = False
+            reminder = self.Qlearn.position % (self.n)
+            row = int(self.Qlearn.position / self.n) 
+
+
+            box = pygame.Rect(reminder * self.square_length, self.board_offset_y + row * self.square_length, self.square_length, self.square_length)
+            pygame.draw.rect(self.screen, GREEN_COLOR, box)
+            mouse_label = small_font.render(MOUSE_NAME, True, white_color)        
+            self.screen.blit(mouse_label, 
+                      ((box.x + (box.width - mouse_label.get_width()) // 2, 
+                      box.y + (box.height - mouse_label.get_height()) // 2)))
+
+
+
+        key_pressed = pygame.key.get_pressed()
+        util = Utils()
+        if util.left_click_event():
+            mouse_coords = util.get_mouse_event()
+            if start_btn.collidepoint(mouse_coords[0], mouse_coords[1]):
+                pygame.draw.rect(self.screen, white_color, start_btn, 3)
+                self.prediction = True
+
+            if back_btn.collidepoint(mouse_coords[0], mouse_coords[1]):
+                self.prediction = False
+                self.state = GameState.MENU
+
+            
+            elif key_pressed[K_ESCAPE]:
+                self.state = GameState.MENU
+
+
+    def learn(self):
+        black_color = (0, 0, 0)
+        color = (0,255,0)
+        self.screen.fill(color)
+        btn_h = 50
+        gap = 10
+        h_gap = 10
+
+        start_btn = pygame.Rect(0, W_H - btn_h - h_gap, W_W, btn_h / 2)        
+        back_btn = pygame.Rect(0, W_H - (btn_h / 2), W_W, btn_h / 2)
 
         # show play button
-        pygame.draw.rect(self.screen, black_color, sync_btn)
-        pygame.draw.rect(self.screen, black_color, async_btn)
+        pygame.draw.rect(self.screen, black_color, start_btn)
         pygame.draw.rect(self.screen, black_color, back_btn)
-        pygame.draw.rect(self.screen, black_color, reset_btn)
+
         # white color
         white_color = (255, 255, 255)
         # create fonts for texts
         big_font = pygame.font.SysFont("comicsansms", 50)
         small_font = pygame.font.SysFont("comicsansms", 20)
         # create text to be shown on the game menu
-        sync_btn_label = small_font.render("Sync", True, white_color)        
-        async_btn_label = small_font.render("Async", True, white_color)        
+        start_btn_label = small_font.render("Start Learn", True, white_color)        
         back_btn_label = small_font.render("Back", True, white_color)        
-        reset_btn_label = small_font.render("Reset", True, white_color)        
         # show text on the Play button
-        self.screen.blit(sync_btn_label, 
-                      ((sync_btn.x + (sync_btn.width - sync_btn_label.get_width()) // 2, 
-                      sync_btn.y + (sync_btn.height - sync_btn_label.get_height()) // 2)))
+
+        self.screen.blit(start_btn_label, 
+                      ((start_btn.x + (start_btn.width - start_btn_label.get_width()) // 2, 
+                      start_btn.y + (start_btn.height - start_btn_label.get_height()) // 2)))
                       
-        self.screen.blit(async_btn_label, 
-                      ((async_btn.x + (async_btn.width - async_btn_label.get_width()) // 2, 
-                      async_btn.y + (async_btn.height - async_btn_label.get_height()) // 2)))
+
         self.screen.blit(back_btn_label, 
                       ((back_btn.x + (back_btn.width - back_btn_label.get_width()) // 2, 
                       back_btn.y + (back_btn.height - back_btn_label.get_height()) // 2)))
                       
-        self.screen.blit(reset_btn_label, 
-                      ((reset_btn.x + (reset_btn.width - reset_btn_label.get_width()) // 2, 
-                      reset_btn.y + (reset_btn.height - reset_btn_label.get_height()) // 2)))
 
-        self.board.draw_board()
-        # get pressed keys
+        self.board.draw_board(False)
+
+        if self.learning:
+            self.Qlearn.game_process(True)
+            reminder = self.Qlearn.position % (self.n)
+            row = int(self.Qlearn.position / self.n) 
+
+            # print('reminder', reminder)
+            # print('row', row)
+            # print('position', self.Qlearn.position)
+            # print('\n')
+
+
+            box = pygame.Rect(reminder * self.square_length, self.board_offset_y + row * self.square_length, self.square_length, self.square_length)
+            pygame.draw.rect(self.screen, GREEN_COLOR, box)
+
+            mouse_label = small_font.render(MOUSE_NAME, True, white_color)        
+        # show text on the Play button
+
+            self.screen.blit(mouse_label, 
+                      ((box.x + (box.width - mouse_label.get_width()) // 2, 
+                      box.y + (box.height - mouse_label.get_height()) // 2)))
+            # print('learning')
+
+        #stop learning
+        if self.Qlearn.generation == self.Qlearn.max_generation:
+            self.learning = False
+
+
         key_pressed = pygame.key.get_pressed()
-        # 
         util = Utils()
 
-        # check if left mouse button was clicked
         if util.left_click_event():
-            # call function to get mouse event
             mouse_coords = util.get_mouse_event()
 
-            # check if "Play" button was clicked
-            if sync_btn.collidepoint(mouse_coords[0], mouse_coords[1]):
-                # change button behavior as it is hovered
-                pygame.draw.rect(self.screen, white_color, sync_btn, 3)
-                # change menu flag
-                matrix = from_dic_matrix(self.board.mem, self.n)
-                recovered = self.net.recover_sync(matrix)
-                r_dic = {(y,x): True if value == 1 else False for y, row in enumerate(recovered) for x, value in enumerate(row)}
-                self.board.mem = r_dic
+            if start_btn.collidepoint(mouse_coords[0], mouse_coords[1]):
+                pygame.draw.rect(self.screen, white_color, start_btn, 3)
+                self.learning = True
 
             if back_btn.collidepoint(mouse_coords[0], mouse_coords[1]):
                 self.state = GameState.MENU
 
-            if reset_btn.collidepoint(mouse_coords[0], mouse_coords[1]):
-                self.board.reset()
-
-            if async_btn.collidepoint(mouse_coords[0], mouse_coords[1]):
-                # change button behavior as it is hovered
-                pygame.draw.rect(self.screen, white_color, async_btn, 3)
-                # change menu flag
-                matrix = from_dic_matrix(self.board.mem, self.n)
-                recovered = self.net.recover_async(matrix)
-
-                r_dic = {(y,x): True if value == 1 else False for y, row in enumerate(recovered) for x, value in enumerate(row)}
-                self.board.mem = r_dic
             
-
             elif key_pressed[K_ESCAPE]:
                 self.state = GameState.MENU
 
-
         if debug:
-            print('recover')
+            print('learn')
