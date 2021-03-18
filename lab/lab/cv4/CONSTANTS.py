@@ -3,7 +3,7 @@ NOT_ALLOWED = -1
 TRAP = -100
 CHEESE = 100
 
-MOUSE_NAME = 'PEPIK'
+MOUSE_NAME = 'Lit mouse'
 
 FAST_LEARN = True
 

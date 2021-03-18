@@ -29,14 +29,17 @@ class QLearning():
             print(pd.DataFrame(self.Q))
 
         if not self.processed:
-            self.set_init_position()
+            if learn:
+                self.set_init_position()
             self.processed = True
 
         if self.move(learn):
             self.generation += 1
             self.prob = 1 / self.generation
-            self.set_init_position()
+            if learn:
+                self.set_init_position()
             if not learn:
+                print('END!')
                 return True
         return False
 

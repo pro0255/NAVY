@@ -332,19 +332,23 @@ class CheeseGame:
                       back_btn.y + (back_btn.height - back_btn_label.get_height()) // 2)))
                       
 
-        self.board.draw_board(False)
+        res = self.board.draw_board(False, True)
+        if res is not None:
+            self.Qlearn.position = res[0] * self.n + res[1]
+
+
+        reminder = self.Qlearn.position % (self.n)
+        row = int(self.Qlearn.position / self.n) 
+
+
+        box = pygame.Rect(reminder * self.square_length, self.board_offset_y + row * self.square_length, self.square_length, self.square_length)
+        pygame.draw.rect(self.screen, GREEN_COLOR, box)
+        mouse_label = small_font.render(MOUSE_NAME, True, white_color)        
+        self.screen.blit(mouse_label, 
+                    ((box.x + (box.width - mouse_label.get_width()) // 2, 
+                    box.y + (box.height - mouse_label.get_height()) // 2)))
 
         if self.prediction:
-            reminder = self.Qlearn.position % (self.n)
-            row = int(self.Qlearn.position / self.n) 
-
-
-            box = pygame.Rect(reminder * self.square_length, self.board_offset_y + row * self.square_length, self.square_length, self.square_length)
-            pygame.draw.rect(self.screen, GREEN_COLOR, box)
-            mouse_label = small_font.render(MOUSE_NAME, True, white_color)        
-            self.screen.blit(mouse_label, 
-                      ((box.x + (box.width - mouse_label.get_width()) // 2, 
-                      box.y + (box.height - mouse_label.get_height()) // 2)))
 
             if self.Qlearn.game_process(False):
                 self.prediction = False
