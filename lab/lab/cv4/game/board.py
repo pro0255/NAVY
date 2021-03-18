@@ -9,7 +9,9 @@ from lab.cv4.game.DEFAULT_MATRIX import DEFAULT_MATRIX
 
 
 class Board:
-    def __init__(self, screen, square_coords, square_length, n, trap, grass, cheese, wall):
+    def __init__(
+        self, screen, square_coords, square_length, n, trap, grass, cheese, wall
+    ):
         self.screen = screen
         self.board_locations = square_coords
         self.square_length = int(square_length)
@@ -64,10 +66,10 @@ class Board:
                     self.screen.blit(
                         image,
                         (
-                        (
-                            box.x,
-                            box.y,
-                        )
+                            (
+                                box.x,
+                                box.y,
+                            )
                         ),
                     )
 

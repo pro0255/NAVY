@@ -69,9 +69,6 @@ class CheeseGame:
         self.cheese = pygame.image.load(f".//lab//cv4//game//images//cheese.png")
         self.wall = pygame.image.load(f".//lab//cv4//game//images//wall.jpg")
 
-
-
-
         self.square_length = 0
 
     def start_game(self):
@@ -83,11 +80,21 @@ class CheeseGame:
 
         # get the width of a chess board square
         self.square_length = int(W_W / self.n)
-        self.mouse = pygame.transform.scale(self.mouse, ( self.square_length,  self.square_length))
-        self.trap = pygame.transform.scale(self.trap, ( self.square_length,  self.square_length))
-        self.grass = pygame.transform.scale(self.grass, ( self.square_length,  self.square_length))
-        self.cheese = pygame.transform.scale(self.cheese, ( self.square_length,  self.square_length))
-        self.wall = pygame.transform.scale(self.wall, ( self.square_length,  self.square_length))
+        self.mouse = pygame.transform.scale(
+            self.mouse, (self.square_length, self.square_length)
+        )
+        self.trap = pygame.transform.scale(
+            self.trap, (self.square_length, self.square_length)
+        )
+        self.grass = pygame.transform.scale(
+            self.grass, (self.square_length, self.square_length)
+        )
+        self.cheese = pygame.transform.scale(
+            self.cheese, (self.square_length, self.square_length)
+        )
+        self.wall = pygame.transform.scale(
+            self.wall, (self.square_length, self.square_length)
+        )
 
         # initialize list that stores all places to put chess pieces on the board
         self.board_locations = []
@@ -104,7 +111,14 @@ class CheeseGame:
                 )
 
         self.board = Board(
-            self.screen, self.board_locations, self.square_length, self.n, self.trap, self.grass, self.cheese, self.wall
+            self.screen,
+            self.board_locations,
+            self.square_length,
+            self.n,
+            self.trap,
+            self.grass,
+            self.cheese,
+            self.wall,
         )
 
         # game loop
@@ -462,7 +476,6 @@ class CheeseGame:
                 )
             ),
         )
-
 
         if self.prediction:
 
