@@ -1,9 +1,10 @@
 import numpy as np
 from lab.cv3.CONSTANTS import pattern8, pattern8_destroyed
-from lab.cv3.utils.from_pattern2matrix import from_pattern2matrix 
+from lab.cv3.utils.from_pattern2matrix import from_pattern2matrix
 from models.HopfieldNet import HopfieldNet
 from lab.cv3.game.game import Game
 from lab.cv3.CONSTANTS import SIZE_OF_GAME
+
 
 def cv3():
     g = Game(SIZE_OF_GAME)

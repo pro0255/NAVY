@@ -9,7 +9,8 @@ WHITE = (255, 255, 255)
 
 BLACK = (0, 0, 0)
 
-class Board():
+
+class Board:
     def __init__(self, screen, square_coords, square_length, n):
         self.screen = screen
         self.board_locations = square_coords
@@ -18,10 +19,9 @@ class Board():
         self.utils = Utils()
         self.mem = {(y, x): False for y in range(self.n) for x in range(self.n)}
         # self.reset()
-   
+
     def reset(self):
         self.mem = {(y, x): False for y in range(self.n) for x in range(self.n)}
-
 
     # method to draw pieces on the chess board
     def draw_board(self):
@@ -33,8 +33,6 @@ class Board():
                 pygame.draw.rect(self.screen, WHITE if not value else BLACK, box)
                 # pygame.Surface.blit(self.screen, , box)
 
-
-        
         util = Utils()
         # check if left mouse button was clicked
         if util.left_click_event():
@@ -43,6 +41,4 @@ class Board():
             column = mouse_coords[0] // (self.square_length)
             row = mouse_coords[1] // (self.square_length)
             if (row, column) in self.mem:
-                self.mem[(row, column)] = not self.mem[(row, column)] 
-
-
+                self.mem[(row, column)] = not self.mem[(row, column)]

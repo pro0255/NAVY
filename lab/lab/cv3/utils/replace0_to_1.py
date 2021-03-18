@@ -1,5 +1,5 @@
 def replace0_to_1(matrix):
-    #mutate input
+    # mutate input
     matrix[matrix == 0] = -1
 
 

@@ -1,4 +1,4 @@
-from lab.cv2 import CONSTANTS 
+from lab.cv2 import CONSTANTS
 import numpy as np
 from utils.sigmoid import sigmoid, sigmoid_
 from utils.error import error
@@ -8,6 +8,7 @@ from utils.signum import signum
 
 debug = False
 
+
 class HopfieldNet:
     def __init__(self):
         self.W = None
@@ -16,16 +17,16 @@ class HopfieldNet:
     def save_pattern(self, pattern):
         print(pattern.shape)
         if self.pattern_shape == None:
-            self.pattern_shape = pattern.shape        
+            self.pattern_shape = pattern.shape
         if pattern.shape != self.pattern_shape:
-            print('Pattern was not saved cause bad shape')
+            print("Pattern was not saved cause bad shape")
             return
         W = from_pattern2matrix(pattern)
         if self.W is None:
             self.W = W
         else:
             self.W += W
-        print('Saved pattern in net')
+        print("Saved pattern in net")
 
     def recover_sync(self, destroyed_picture):
         vector = np.array(destroyed_picture.flatten())
@@ -33,8 +34,8 @@ class HopfieldNet:
         vfunc = np.vectorize(signum)
         res = vfunc(np.dot(vector, self.W))
         if debug:
-            print('vector', vector)
-            print('res', res)
+            print("vector", vector)
+            print("res", res)
         replace1_to_0(res)
 
         return res.reshape(self.pattern_shape)
@@ -44,8 +45,8 @@ class HopfieldNet:
         replace0_to_1(vector)
         gen = 0
         while True:
-            print(f'Gen: {gen}')
-            gen += 1 
+            print(f"Gen: {gen}")
+            gen += 1
             old_gen_vector = np.copy(vector)
             for cI in range(self.W.shape[1]):
                 column = self.W[:, cI]
@@ -56,6 +57,3 @@ class HopfieldNet:
 
         replace1_to_0(vector)
         return vector.reshape(self.pattern_shape)
-
-
-

@@ -12,4 +12,3 @@ import matplotlib.pyplot as plt
 cv4()
 
 # input("Press Enter to end...")
-

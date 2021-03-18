@@ -5,9 +5,9 @@ from lab.cv1.visualizer import LineVisualizer
 def signum(X, weights, bias):
     """Signum activation function which returns
 
-        res > 0 <-> 1
-        res = 0 <-> 0
-        res < 0  <-> -1
+    res > 0 <-> 1
+    res = 0 <-> 0
+    res < 0  <-> -1
     """
     res = np.dot(X, weights) + bias
     if res > 0:
@@ -33,7 +33,7 @@ class Perceptron:
     def recalculate_weights(self, error, x):
         """Relaculates weights
         Args:
-            error (int): Represents error which was created due to bad prediction 
+            error (int): Represents error which was created due to bad prediction
             x (int[]): Points [x, y]
         Returns:
             [int[]]: Recalculated weights (net learns from error)
@@ -76,7 +76,6 @@ class Perceptron:
             for x in X
         ]
 
-        res =  np.array(y_prediction)
+        res = np.array(y_prediction)
         lv.draw_test(X, res)
         return res
-        
