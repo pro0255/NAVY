@@ -10,7 +10,7 @@ MOUSE_NAME = "Lit mouse"
 
 FAST_LEARN = True
 
-SIZE_OF_GAME = 5
+SIZE_OF_GAME = 14
 
 
 LEARNING_RATE = 0.3

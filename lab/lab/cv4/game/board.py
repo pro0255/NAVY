@@ -10,7 +10,7 @@ from lab.cv4.game.DEFAULT_MATRIX import DEFAULT_MATRIX
 
 class Board:
     def __init__(
-        self, screen, square_coords, square_length, n, trap, grass, cheese, wall
+        self, screen, square_coords, square_length, n, trap, grass, cheese, wall, default_matrix = DEFAULT_MATRIX
     ):
         self.screen = screen
         self.board_locations = square_coords
@@ -21,6 +21,7 @@ class Board:
             (y, x): RectState.EMPTY for y in range(self.n) for x in range(self.n)
         }
         self.rect_state = RectState.TRAP
+        self.default_matrix = default_matrix
         self.set_default()
         self.trap = trap
         self.grass = grass
@@ -29,12 +30,11 @@ class Board:
         # self.reset()
 
     def set_default(self):
-        size = len(DEFAULT_MATRIX)
-        if self.n != size:
-            raise ValueError("Not same size!")
-        self.mem = {
-            (y, x): DEFAULT_MATRIX[y][x] for y in range(size) for x in range(size)
-        }
+        size = len(self.default_matrix)
+        if self.n == size:
+            self.mem = {
+                (y, x): self.default_matrix[y][x] for y in range(size) for x in range(size)
+            }
 
     def reset(self):
         self.mem = {

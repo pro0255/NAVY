@@ -20,7 +20,7 @@ from lab.cv4.CONSTANTS import (
 import numpy as np
 import pandas as pd
 
-W_W = 500
+W_W = 600
 SELECT_BAR = 200
 EXTRA = 100
 W_H = W_W + EXTRA + SELECT_BAR
