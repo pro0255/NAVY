@@ -22,30 +22,30 @@ def print_info(env, state, t, reward,  episode, agent, action):
     print("\n")
 
 def cv5():
+
     env = gym.make('CartPole-v0')
     #position, velocity, angle, and angular velocity - observations
     agent = QAgent(EPISODES, LEARNING_RATE, BUCKETS)
+
     def run_condition(t, done, state, test, epoch, agent):
         run = True
         if done:
+
+
             run = False
             if VERBOSE_TIME:
                 text = f'{t}' if test else f't={t}; e={epoch}; l={agent.learning_rate}'
                 print(f'Ended in time -> {text}')
-        if t > TIMESTAMPS:
-            print(test)
-            if not test:
-
-                if VERBOSE_TIME:
-                    print(f'Ended in time -> t={t}; e={epoch}; l={agent.learning_rate}')
-                run = False
         return run
 
 
     epoch_i = 0
     HISTORY = []
     SAVED = False
-    
+
+    SOLVED = False
+    SAVE_T = None
+
     while True:
         state = env.reset()
         mapped_state = agent.map_state(env, state)
@@ -54,7 +54,10 @@ def cv5():
 
         test = False
         if epoch_i > EPISODES:
-            input_value = input('Wanna see learned agent? [y/n]\n')
+            fix = '=================='
+            print(f'\n{fix}First hit t={SAVE_T}')
+            input_value = input(f'Wanna see learned agent? [y/n]\n')
+            print(f'{fix}\n')
             test = True if input_value == 'y' else False
             if not test:
                 print('Ending program.. bye')
@@ -89,6 +92,9 @@ def cv5():
             if test:
                 env.render()
             t += 1
+            if t == TIMESTAMPS and not SOLVED:
+                SOLVED = True
+                SAVE_T = epoch_i
 
         HISTORY.append((epoch_i, t))
         #Update probability after one episode (generation)
