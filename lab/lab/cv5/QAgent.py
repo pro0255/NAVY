@@ -33,10 +33,11 @@ class QAgent:
 
         #prepis
         #velocity
-        lower_bounds[1] = -.5
-        upper_bounds[1] = .5
+        # lower_bounds[1] = -.5
+        # upper_bounds[1] = .5
 
         #angular velocity
+        
         lower_bounds[3] = -math.radians(50)
         upper_bounds[3] = math.radians(50)
 
@@ -119,5 +120,6 @@ class QAgent:
         max_value = np.max(self.Q[tuple(next_state)])
         update = self.learning_rate * (DISCOUNT_FACTOR * max_value + reward - self.Q[tuple(state)][action])
         self.Q[tuple(state)][action] += update
+        #1-self.learning?
 
 
