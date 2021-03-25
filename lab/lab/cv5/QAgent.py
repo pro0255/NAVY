@@ -2,7 +2,7 @@ import numpy as np
 import math
 from sklearn.preprocessing import KBinsDiscretizer
 import pandas as pd
-from lab.cv5.CONSTANTS import DISCOUNT_FACTOR, EXPLORE_RATE, LEARNING_RATE
+from lab.cv5.CONSTANTS import DISCOUNT_FACTOR, LEARNING_RATE, CONSTANT_LR
 
 
 
@@ -14,14 +14,9 @@ class QAgent:
         self.learning_rate = self.l_r(0) #
         self.buckets = buckets
         self.prob = 1
-
-
-    def e_r(self, epoch):
-        e =  max(EXPLORE_RATE, min(1, 1.0 - math.log10((epoch+1)/25)))
-        return e
     
     def l_r(self, epoch):
-        l = max(LEARNING_RATE, min(0.5, 1.0 - math.log10((epoch+1)/25)))
+        l = LEARNING_RATE if CONSTANT_LR else max(LEARNING_RATE, min(0.5, 1.0 - math.log10((epoch+1)/25)))
         return l
 
 
@@ -91,8 +86,8 @@ class QAgent:
             scaling = (current_state + abs(current_lower_b)) / (current_upper_b - current_lower_b)
             new_state = int(round((current_bucket - 1) * scaling))
             new_state = min(current_bucket - 1, max(0, new_state)) #bounderies
-            mapped_state.append(new_state)
-            
+            mapped_state.append(new_state)           
+
         return mapped_state
 
 
