@@ -30,13 +30,14 @@ def cv5():
         if done:
             run = False
             if VERBOSE_TIME:
-                print(f'Ended in timestemp -> t={t}; e={epoch}; l={agent.learning_rate}')
+                text = f'{t}' if test else f't={t}; e={epoch}; l={agent.learning_rate}'
+                print(f'Ended in time -> {text}')
         if t > TIMESTAMPS:
             print(test)
             if not test:
 
                 if VERBOSE_TIME:
-                    print(f'Ended in timestemp -> t={t}; e={epoch}; l={agent.learning_rate}')
+                    print(f'Ended in time -> t={t}; e={epoch}; l={agent.learning_rate}')
                 run = False
         return run
 
@@ -44,7 +45,7 @@ def cv5():
     epoch_i = 0
     HISTORY = []
     SAVED = False
-
+    
     while True:
         state = env.reset()
         mapped_state = agent.map_state(env, state)
@@ -65,6 +66,7 @@ def cv5():
                     plt.xlabel('epoch index')
                     plt.ylabel('time')
                     plt.savefig(f'.//lab//cv5//graph2.png')
+                    plt.grid()
                     plt.show()
                     SAVED = True
                 exit()
@@ -84,7 +86,8 @@ def cv5():
             #Set new bucket state
             mapped_state = next_mapped_state
 
-            env.render()
+            if test:
+                env.render()
             t += 1
 
         HISTORY.append((epoch_i, t))
