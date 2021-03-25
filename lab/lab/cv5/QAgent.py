@@ -32,8 +32,11 @@ class QAgent:
 
 
         #prepis
+        #velocity
         lower_bounds[1] = -.5
         upper_bounds[1] = .5
+
+        #angular velocity
         lower_bounds[3] = -math.radians(50)
         upper_bounds[3] = math.radians(50)
 

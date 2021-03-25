@@ -1,5 +1,5 @@
 import gym
-from lab.cv5.CONSTANTS import EPISODES, TIMESTAMPS, LEARNING_RATE, BUCKETS
+from lab.cv5.CONSTANTS import EPISODES, TIMESTAMPS, LEARNING_RATE, BUCKETS, FIGURE
 from lab.cv5.QAgent import QAgent
 import numpy as np
 import matplotlib.pyplot as plt
@@ -62,16 +62,17 @@ def cv5():
             if not test:
                 print('Ending program.. bye')
                 if not SAVED:
-                    X, y = zip(*HISTORY)
-                    plt.clf()
-                    plt.plot(X, y)
-                    plt.title('pole balancing problem')
-                    plt.xlabel('epoch index')
-                    plt.ylabel('time')
-                    plt.savefig(f'.//lab//cv5//graph2.png')
-                    plt.grid()
-                    plt.show()
-                    SAVED = True
+                    if FIGURE:
+                        X, y = zip(*HISTORY)
+                        plt.clf()
+                        plt.plot(X, y)
+                        plt.title('pole balancing problem')
+                        plt.xlabel('epoch index')
+                        plt.ylabel('time')
+                        plt.savefig(f'.//lab//cv5//graph2.png')
+                        plt.grid()
+                        plt.show()
+                        SAVED = True
                 exit()
 
 

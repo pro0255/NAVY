@@ -4,8 +4,11 @@
 EPISODES = 1000
 TIMESTAMPS = 200
 
-BUCKETS = (1, 1, 6, 3) #cause velocity ans postiion of cart is insignificant
+BUCKETS = (1, 1, 12, 12) #cause velocity ans postiion of cart is insignificant
 
+
+
+FIGURE = False
 
 CONSTANT_LR = True
 
