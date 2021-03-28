@@ -23,8 +23,16 @@ class LSystem():
         while(c < self.num):
             res = res.replace('F', self.rule)
             c += 1
-
         self.resolved = res
+
+
+    def create_rule(self, rule):
+        i = rule.index('>')
+        i_start_rule = i + 2
+        left_side = rule[0:i-2]
+        right_side = rule[i_start_rule:len(rule)]
+        return left_side, right_side
+
 
     def draw(self):
         t = turtle.Turtle()

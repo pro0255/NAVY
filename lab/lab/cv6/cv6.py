@@ -7,10 +7,12 @@ def run(tup, num):
     s.draw()
 
 
+
+
 def cv6():
-    # run(first,2)
+    run(first,2)
     # run(second,2)
-    run(third, 5)
+    # run(third, 5)
     # run(fourth,2)
 
 
