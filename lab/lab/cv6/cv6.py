@@ -10,7 +10,7 @@ def run(tup, num):
 def cv6():
     # run(first,2)
     # run(second,2)
-    run(third, 1)
+    run(third, 5)
     # run(fourth,2)
 
 

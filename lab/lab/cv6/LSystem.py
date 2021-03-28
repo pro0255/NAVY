@@ -4,6 +4,9 @@ import turtle
 
 SIZE = 20
 
+
+#? https://fedimser.github.io/l-systems.html
+
 class LSystem():
     def __init__(self, axiom, rule, angle, num):
         self.angle = angle
@@ -22,7 +25,6 @@ class LSystem():
             c += 1
 
         self.resolved = res
-
 
     def draw(self):
         t = turtle.Turtle()
