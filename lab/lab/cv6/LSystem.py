@@ -2,18 +2,18 @@
 import turtle
 
 
-SIZE = 20
-
+SIZE = 5
 
 #? https://fedimser.github.io/l-systems.html
 
 class LSystem():
-    def __init__(self, axiom, rule, angle, num):
+    def __init__(self, axiom, rules, angle, num):
         self.angle = angle
-        self.rule = rule
+        self.rules = rules
         self.axiom = axiom
         self.num = num
         self.resolved = None
+        self.left2right = self.create_left2right(rules)
         self.resolve_axiom_deps_rule()
         self.stack = []
 
@@ -21,10 +21,24 @@ class LSystem():
         c = 0
         res = self.axiom
         while(c < self.num):
-            res = res.replace('F', self.rule)
+            nested = ''
+            for char in res:
+                if char in self.left2right.keys():
+                    nested += self.left2right[char]
+                else:
+                    nested += char
+            res = nested
+            # res = res.replace('F', self.rule)
             c += 1
         self.resolved = res
 
+
+    def create_left2right(self, rules):
+        res = {}
+        for rule in rules:
+            left, right = self.create_rule(rule)
+            res[left] = right
+        return res
 
     def create_rule(self, rule):
         i = rule.index('>')
@@ -36,6 +50,7 @@ class LSystem():
 
     def draw(self):
         t = turtle.Turtle()
+        t.speed(10)
         c = 0
         size = len(self.resolved)
         while(c < size):
