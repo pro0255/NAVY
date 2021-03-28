@@ -1,13 +1,18 @@
 
 import turtle
 
+
+SIZE = 20
+
 class LSystem():
     def __init__(self, axiom, rule, angle, num):
         self.angle = angle
         self.rule = rule
         self.axiom = axiom
         self.num = num
+        self.resolved = None
         self.resolve_axiom_deps_rule()
+        self.stack = []
 
     def resolve_axiom_deps_rule(self):
         c = 0
@@ -15,18 +20,29 @@ class LSystem():
         while(c < self.num):
             res = res.replace('F', self.rule)
             c += 1
-        print(res)
 
+        self.resolved = res
 
 
     def draw(self):
         t = turtle.Turtle()
         c = 0
-        while(c < 3):
-            t.forward(50)
+        size = len(self.resolved)
+        while(c < size):
+            current = self.resolved[c]
+            if current == 'F':
+                t.forward(SIZE)
+            if current == '+':
+                t.left(self.angle)
+            if current == '-':
+                t.right(self.angle)
+            if current == '[':
+                self.stack.append((t.position(), t.heading()))
+            if current == ']':
+                state = self.stack.pop()
+                pos, head = state
+                t.setposition(pos)
+                t.setheading(head)
             c+=1
-        
-
-
         input('Exit..')
 
