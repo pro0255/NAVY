@@ -31,15 +31,14 @@ class QAgent:
             upper_bounds.append(t[1])
 
 
-        #prepis
         #velocity
         # lower_bounds[1] = -.5
         # upper_bounds[1] = .5
 
         #angular velocity
-        
-        lower_bounds[3] = -math.radians(50)
-        upper_bounds[3] = math.radians(50)
+
+        lower_bounds[3] = -math.radians(30)
+        upper_bounds[3] = math.radians(30)
 
 
         ##1
@@ -89,9 +88,8 @@ class QAgent:
             current_lower_b = lower_bounds[i]
             scaling = (current_state + abs(current_lower_b)) / (current_upper_b - current_lower_b)
             new_state = int(round((current_bucket - 1) * scaling))
-            new_state = min(current_bucket - 1, max(0, new_state)) #bounderies
+            new_state = min(current_bucket - 1, max(0, new_state)) #bounderies 0 - bucket size
             mapped_state.append(new_state)           
-
         return mapped_state
 
 
@@ -102,12 +100,9 @@ class QAgent:
 
     def get_action(self, env, state, test):
         r = np.random.uniform()
-
         is_random = r <= self.prob
-
         if test:
             is_random = False
-
         action = None
         if is_random:
             action = env.action_space.sample()

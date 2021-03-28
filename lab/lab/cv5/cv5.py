@@ -30,8 +30,6 @@ def cv5():
     def run_condition(t, done, state, test, epoch, agent):
         run = True
         if done:
-
-
             run = False
             if VERBOSE_TIME:
                 text = f'{t}' if test else f't={t}; e={epoch}; l={agent.learning_rate}'
