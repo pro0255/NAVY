@@ -10,7 +10,16 @@ from lab.cv4.game.DEFAULT_MATRIX import DEFAULT_MATRIX
 
 class Board:
     def __init__(
-        self, screen, square_coords, square_length, n, trap, grass, cheese, wall, default_matrix = DEFAULT_MATRIX
+        self,
+        screen,
+        square_coords,
+        square_length,
+        n,
+        trap,
+        grass,
+        cheese,
+        wall,
+        default_matrix=DEFAULT_MATRIX,
     ):
         self.screen = screen
         self.board_locations = square_coords
@@ -33,7 +42,9 @@ class Board:
         size = len(self.default_matrix)
         if self.n == size:
             self.mem = {
-                (y, x): self.default_matrix[y][x] for y in range(size) for x in range(size)
+                (y, x): self.default_matrix[y][x]
+                for y in range(size)
+                for x in range(size)
             }
 
     def reset(self):

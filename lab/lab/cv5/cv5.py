@@ -7,9 +7,10 @@ import matplotlib.pyplot as plt
 
 VERBOSE_TIME = True
 HISTORY = []
-#https://gym.openai.com/docs/
+# https://gym.openai.com/docs/
 
-def print_info(env, state, t, reward,  episode, agent, action):
+
+def print_info(env, state, t, reward, episode, agent, action):
     # print_info(env, next_mapped_state, t, reward, epoch_i, agent, action)
 
     print("\nepisode: %d" % episode)
@@ -21,10 +22,11 @@ def print_info(env, state, t, reward,  episode, agent, action):
     print(f"prob {agent.prob}")
     print("\n")
 
+
 def cv5():
 
-    env = gym.make('CartPole-v0')
-    #position, velocity, angle, and angular velocity - observations
+    env = gym.make("CartPole-v0")
+    # position, velocity, angle, and angular velocity - observations
     agent = QAgent(EPISODES, LEARNING_RATE, BUCKETS)
 
     def run_condition(t, done, state, test, epoch, agent):
@@ -32,10 +34,9 @@ def cv5():
         if done:
             run = False
             if VERBOSE_TIME:
-                text = f'{t}' if test else f't={t}; e={epoch}; l={agent.learning_rate}'
-                print(f'Ended in time -> {text}')
+                text = f"{t}" if test else f"t={t}; e={epoch}; l={agent.learning_rate}"
+                print(f"Ended in time -> {text}")
         return run
-
 
     epoch_i = 0
     HISTORY = []
@@ -52,40 +53,39 @@ def cv5():
 
         test = False
         if epoch_i > EPISODES:
-            fix = '=================='
-            print(f'\n{fix}First hit t={SAVE_T}')
-            input_value = input(f'Wanna see learned agent? [y/n]\n')
-            print(f'{fix}\n')
-            test = True if input_value == 'y' else False
+            fix = "=================="
+            print(f"\n{fix}First hit t={SAVE_T}")
+            input_value = input(f"Wanna see learned agent? [y/n]\n")
+            print(f"{fix}\n")
+            test = True if input_value == "y" else False
             if not test:
-                print('Ending program.. bye')
+                print("Ending program.. bye")
                 if not SAVED:
                     if FIGURE:
                         X, y = zip(*HISTORY)
                         plt.clf()
                         plt.plot(X, y)
-                        plt.title('pole balancing problem')
-                        plt.xlabel('epoch index')
-                        plt.ylabel('time')
-                        plt.savefig(f'.//lab//cv5//graph2.png')
+                        plt.title("pole balancing problem")
+                        plt.xlabel("epoch index")
+                        plt.ylabel("time")
+                        plt.savefig(f".//lab//cv5//graph2.png")
                         plt.grid()
                         plt.show()
                         SAVED = True
                 exit()
 
-
         while run_condition(t, done, state, test, epoch_i, agent):
-            #Get actions deps on probability
+            # Get actions deps on probability
             action = agent.get_action(env, mapped_state, test)
-            #Moves in env
+            # Moves in env
             next_state, reward, done, info = env.step(action)
-            #State to buckets
+            # State to buckets
             next_mapped_state = agent.map_state(env, next_state)
-            #Update of Q matrix
+            # Update of Q matrix
             agent.update_Q(mapped_state, action, next_mapped_state, reward)
-            #Set new state
+            # Set new state
             state = next_state
-            #Set new bucket state
+            # Set new bucket state
             mapped_state = next_mapped_state
 
             if test:
@@ -96,14 +96,11 @@ def cv5():
                 SAVE_T = epoch_i
 
         HISTORY.append((epoch_i, t))
-        #Update probability after one episode (generation)
+        # Update probability after one episode (generation)
         epoch_i += 1
         agent.update_prob()
         agent.learning_rate = agent.l_r(epoch_i)
 
     env.close()
-
-
-
 
     # print(agent.Q)

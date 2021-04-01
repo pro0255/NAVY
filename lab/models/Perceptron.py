@@ -22,11 +22,9 @@ def error(y, y_guess):
     return y - y_guess
 
 
-lv = LineVisualizer()
-
-
 class Perceptron:
     def __init__(self, learning_rate, X_l):
+        self.lv = LineVisualizer()
         self.learning_rate = learning_rate
         self.weights = np.random.uniform(0, 1, X_l + 1)
 
@@ -62,7 +60,7 @@ class Perceptron:
                 current_error = error(y[index], y_guess)
                 self.weights = self.recalculate_weights(current_error, x)
 
-            lv.draw_train(X, y_guesses)
+            self.lv.draw_train(X, y_guesses)
 
     def predict(self, X):
         """Method represents prediction process of unknown data
@@ -77,5 +75,5 @@ class Perceptron:
         ]
 
         res = np.array(y_prediction)
-        lv.draw_test(X, res)
+        self.lv.draw_test(X, res)
         return res
