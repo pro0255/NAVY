@@ -7,12 +7,14 @@ from lab.cv7.CONSTANTS import GEN, COLOR, p, SIZE
 import pandas as pd
 
 
+
 def visualize(x, y, z):
     fig, ax = plt.subplots(subplot_kw={"projection": "3d"}, figsize=(15, 6))
     surf = ax.scatter(x, y, z, linewidth=0, antialiased=False, c=COLOR, s=SIZE)
     plt.show()
 
 
+#https://homel.vsb.cz/~ska206/navy/Ex_7_IFS.txt
 def cv7():
     model1 = pd.read_csv(f'./lab/cv7/models/model1.csv',sep=';')
     model2 = pd.read_csv(f'./lab/cv7/models/model2.csv',sep=';')
