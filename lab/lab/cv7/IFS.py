@@ -4,12 +4,12 @@ from lab.cv7.CONSTANTS import VERBOSE, START_VECTOR
 
 
 r_max = 10
+
+
 class IFS:
     def __init__(self, csv_model, p):
         self.csv_model = csv_model
         self.p = p
-
-
 
     def calculate_cords(self, input_v):
         res = []
@@ -21,7 +21,7 @@ class IFS:
         n_m = np.array(multiplication).reshape(-1, 3)
         n_a = np.array(addition)
 
-        c_r = n_m @ n_input + n_a 
+        c_r = n_m @ n_input + n_a
 
         if VERBOSE:
             print(pd.DataFrame(n_input))
@@ -32,7 +32,6 @@ class IFS:
         res = c_r.flatten()
         return res
 
-    
     def process(self, m_g):
         res = [START_VECTOR]
         for _ in range(m_g):
@@ -43,4 +42,3 @@ class IFS:
         y = res[:, 1]
         z = res[:, 2]
         return x, y, z
-
