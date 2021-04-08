@@ -17,6 +17,9 @@ def visualize(x, y, z):
 def cv7():
     model1 = pd.read_csv(f"./lab/cv7/models/model1.csv", sep=";")
     model2 = pd.read_csv(f"./lab/cv7/models/model2.csv", sep=";")
-    ifs = IFS(model2, p)
+
+
+
+    ifs = IFS(model1, p)
     res = ifs.process(GEN)
     visualize(*res)
