@@ -56,7 +56,7 @@ def cv9():
         x, y = iterate(x, y, displacement)
         displacement = displacement * roughness
 
-    plt.plot(x, y, color='black', lw=0.2)
-    plt.fill_between(x, y, facecolor='blue', alpha=1)
+    plt.plot(x, y, color='black')
+    # plt.fill_between(x, y, facecolor='blue', alpha=1)
     plt.show()
 

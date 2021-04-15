@@ -8,5 +8,5 @@ TO = 10000
 INIT_HEIGHT = 0 #perturbation
 
 
-roughness = 0.55
-initial_displacement = 50
+roughness = 0.33
+initial_displacement = 100
