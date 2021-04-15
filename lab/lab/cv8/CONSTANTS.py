@@ -2,7 +2,7 @@
 
 
 
-SIZE = 1000
+SIZE = 500
 
 
 ZOOM = True
