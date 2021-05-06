@@ -1,4 +1,3 @@
-import numpy as np
 from lab.cv1.cv1 import cv1
 from lab.cv2.cv2 import cv2
 from lab.cv3.cv3 import cv3
@@ -9,8 +8,9 @@ from lab.cv7.cv7 import cv7
 from lab.cv8.cv8 import cv8
 from lab.cv9.cv9 import cv9
 from lab.cv10.cv10 import cv10
-import matplotlib.pyplot as plt
-import math
+from lab.cv11.cv11 import cv11
+from lab.cv12.cv12 import cv12
+
 
 # cv1()
 # cv2()
@@ -21,7 +21,10 @@ import math
 # cv7()
 # cv8()
 # cv9()
-cv10()
+# cv10()
+# cv11()
+cv12()
+
 
 
 

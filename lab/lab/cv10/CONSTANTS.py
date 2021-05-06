@@ -5,10 +5,24 @@ x_0 = 0.1
 N = 500
 
 
+START_R = 1
 DIS_R = 4
+
+
+N_START_R = 2
+N_DIS_R = 4
+
+
+START_TRAIN_R = 1
+END_TRAIN_R =  3.4
+
+TRAIN_SPACE_TIMES = 50
+
+
+
 DECIMALS = 6
 
 R_TRAIN_SIZE = 50
-
+STEP = 0.01
 
 percentil = 0.2
